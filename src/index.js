@@ -32,20 +32,23 @@ initialCards.forEach((item) => {
 function openClosePopup(event) {
   const openPopup = document.querySelector('.popup.popup_type_edit');
   const closePopup = document.querySelector('.popup__close');
-  const page = document.querySelector('.page');
   const popupContent = document.querySelector('.popup__content');
-  
+
 
   if (event.target === editProfile) {
     openPopup.classList.add('popup_is-opened');
   } else if (event.target === closePopup) {
     openPopup.classList.remove('popup_is-opened');
-  } else {
-    openPopup.classList.remove('popup_is-opened');
-  }
+  } 
+
+  document.addEventListener('keydown', function(event) {
+    const key = event.key
+    if (key === 'Escape') {
+      openPopup.classList.remove('popup_is-opened');
+    }
+  });
 
   popupContent.addEventListener('click', openClosePopup);
-  page.addEventListener('click', openClosePopup);
 }
 
 editProfile.addEventListener('click', openClosePopup);
