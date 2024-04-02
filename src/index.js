@@ -1,5 +1,10 @@
 const cardTemplate = document.querySelector('#card-template').content;
 const placeList = document.querySelector('.places__list');
+const editProfile = document.querySelector('.profile__edit-button');
+
+
+
+
 
 function createCard(item, { deleteCard }) {
   const newCard = cardTemplate.cloneNode(true);
@@ -23,3 +28,24 @@ initialCards.forEach((item) => {
   const addCard = createCard(item, { deleteCard });
   placeList.append(addCard);
 })
+
+function openClosePopup(event) {
+  const openPopup = document.querySelector('.popup.popup_type_edit');
+  const closePopup = document.querySelector('.popup__close');
+  const page = document.querySelector('.page');
+  const popupContent = document.querySelector('.popup__content');
+  
+
+  if (event.target === editProfile) {
+    openPopup.classList.add('popup_is-opened');
+  } else if (event.target === closePopup) {
+    openPopup.classList.remove('popup_is-opened');
+  } else {
+    openPopup.classList.remove('popup_is-opened');
+  }
+
+  popupContent.addEventListener('click', openClosePopup);
+  page.addEventListener('click', openClosePopup);
+}
+
+editProfile.addEventListener('click', openClosePopup);
