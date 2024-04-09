@@ -14,16 +14,18 @@ const linkPlaceNameInput = document.querySelector('.popup__input_type_url');
 
 
 
-function createCard(item, { deleteCard }) {
+function createCard(item, { deleteCard, giveLike }) {
   const newCard = cardTemplate.cloneNode(true);
   const cardImage = newCard.querySelector('.card__image');
-  const descriptionCard = newCard.querySelector('.card__description');
+  const cardTitle = newCard.querySelector('.card__title');
   const deleteButton = newCard.querySelector('.card__delete-button');
+  const cardLike = newCard.querySelector('.card__like-button');
 
   cardImage.src = item.link;
   cardImage.alt = item.name
-  descriptionCard.textContent = item.name;
+  cardTitle.textContent = item.name;
   deleteButton.addEventListener('click', deleteCard);
+  cardLike.addEventListener('click', giveLike);
 
   return newCard;
 }
@@ -33,7 +35,7 @@ function deleteCard(event) {
 } 
 
 initialCards.forEach((item) => {
-  const addCard = createCard(item, { deleteCard });
+  const addCard = createCard(item, { deleteCard, giveLike });
   placeList.append(addCard);
 });
 
@@ -109,10 +111,10 @@ function addNewCard(event) {
   const newCardItem = {
     name: placeNameInput.value,
     link: linkPlaceNameInput.value,
-    description: placeNameInput.value
+    title: placeNameInput.value
   };
 
-  const newCard = createCard(newCardItem, { deleteCard });
+  const newCard = createCard(newCardItem, { deleteCard, giveLike});
   placeList.prepend(newCard);
 
   placeNameInput.value = '';
@@ -121,4 +123,7 @@ function addNewCard(event) {
   closePopup(handleAddCard);
 }
 
-
+//Меняет цвет лайка
+function giveLike(event) {
+  event.target.classList.toggle('card__like-button_is-active')
+}
