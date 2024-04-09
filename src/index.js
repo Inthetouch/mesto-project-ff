@@ -84,18 +84,41 @@ function formProfileValue() {
 
 //Функция сохранения введенных значений 
 function valueProfileSubmit(event) {
-    event.preventDefault(); 
+  event.preventDefault(); 
 
-    profileTitle.textContent = nameInput.value;
-    profileDescription.textContent = jobInput.value;
+  profileTitle.textContent = nameInput.value;
+  profileDescription.textContent = jobInput.value;
 
-    closePopup(editPopup);
+  closePopup(editPopup);
 }
 
 //Функция открытия формы карточки
 function buttonAddNewCard() {
-  handleAddCard.classList.add('popup_is-opened')
+  handleAddCard.classList.add('popup_is-opened');
+  
+  handleAddCard.querySelector('.popup__form').addEventListener('submit', addNewCard);
 }
 
 //Слушатель на кнопку "+"
 buttonAddCard.addEventListener('click', buttonAddNewCard);
+
+//Функция добавления карточки
+function addNewCard(event) {
+  event.preventDefault();
+
+  const newCardItem = {
+    name: placeNameInput.value,
+    link: linkPlaceNameInput.value,
+    description: placeNameInput.value
+  };
+
+  const newCard = createCard(newCardItem, { deleteCard });
+  placeList.prepend(newCard);
+
+  placeNameInput.value = '';
+  linkPlaceNameInput.value = '';
+
+  closePopup(handleAddCard);
+}
+
+
