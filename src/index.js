@@ -46,6 +46,7 @@ initialCards.forEach((item) => {
 //Функция окрытия окна редактирования
 function openPopup() {
   formProfileValue();
+  editPopup.classList.add('popup_is-animated');
   editPopup.classList.add('popup_is-opened');
 
   //Слушатель на нажатие кнопки "Сохранить"
@@ -97,6 +98,8 @@ function valueProfileSubmit(event) {
 
 //Функция открытия формы карточки
 function buttonAddNewCard() {
+  
+  handleAddCard.classList.add('popup_is-animated');
   handleAddCard.classList.add('popup_is-opened');
   
   handleAddCard.querySelector('.popup__form').addEventListener('submit', addNewCard);
@@ -134,6 +137,7 @@ function openPicture(event) {
   const popupImage = document.querySelector('.popup__image');
   const popupCaption = document.querySelector(".popup__caption");
   
+  popupTypeImage.classList.add('popup_is-animated');
   popupTypeImage.classList.toggle('popup_is-opened');
   
   popupImage.src = event.target.src;
