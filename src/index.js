@@ -14,7 +14,7 @@ const linkPlaceNameInput = document.querySelector('.popup__input_type_url');
 
 
 
-function createCard(item, { deleteCard, giveLike }) {
+function createCard(item, { deleteCard, giveLike, openPicture }) {
   const newCard = cardTemplate.cloneNode(true);
   const cardImage = newCard.querySelector('.card__image');
   const cardTitle = newCard.querySelector('.card__title');
@@ -26,6 +26,7 @@ function createCard(item, { deleteCard, giveLike }) {
   cardTitle.textContent = item.name;
   deleteButton.addEventListener('click', deleteCard);
   cardLike.addEventListener('click', giveLike);
+  cardImage.addEventListener('click', openPicture);
 
   return newCard;
 }
@@ -35,7 +36,7 @@ function deleteCard(event) {
 } 
 
 initialCards.forEach((item) => {
-  const addCard = createCard(item, { deleteCard, giveLike });
+  const addCard = createCard(item, { deleteCard, giveLike, openPicture });
   placeList.append(addCard);
 });
 
@@ -61,12 +62,12 @@ function closePopup(element) {
 
 //Слушатель на нажатие кнопки Escape при открытом окне
 document.addEventListener('keydown', function(event) {
-  if (event.key === 'Escape' && editPopup.classList.contains('popup_is-opened')) {
-    closePopup(editPopup);
-  } else if (event.key === 'Escape' && handleAddCard.classList.contains('popup_is-opened')) {
-    closePopup(handleAddCard);
+  const openedPopup = document.querySelector('.popup_is-opened');
+
+  if (event.key === 'Escape') {
+    closePopup(openedPopup);
   }
-});
+})
 
 //Слушатель отслеживающий нажатие крестика и клика на overlay
 document.querySelectorAll('.popup').forEach(function(popup) {
@@ -126,4 +127,17 @@ function addNewCard(event) {
 //Меняет цвет лайка
 function giveLike(event) {
   event.target.classList.toggle('card__like-button_is-active')
+}
+
+function openPicture(event) {
+  const popupTypeImage = document.querySelector('.popup_type_image');
+  const popupImage = document.querySelector('.popup__image');
+  const popupCaption = document.querySelector(".popup__caption");
+  
+  popupTypeImage.classList.toggle('popup_is-opened');
+  
+  popupImage.src = event.target.src;
+  popupImage.alt = event.target.alt;
+
+  popupCaption.textContent = event.target.alt; 
 }
