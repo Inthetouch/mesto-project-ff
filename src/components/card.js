@@ -1,5 +1,3 @@
-export { createCard, addNewCard, deleteCard, giveLike };
-
 //Функция создания карточек
 function createCard(item, { deleteCard, giveLike, openPicture }) {
   const cardTemplate = document.querySelector('#card-template').content;
@@ -50,3 +48,5 @@ function deleteCard(event) {
 function giveLike(event) {
   event.target.classList.toggle('card__like-button_is-active')
 }
+
+export { createCard, addNewCard, deleteCard, giveLike };

@@ -1,4 +1,3 @@
-export { openPopup, closePopup, buttonAddNewCard, openPicture };
 import { formProfileValue, valueProfileSubmit } from '../index.js';
 import { addNewCard } from './card.js';
 
@@ -43,3 +42,5 @@ function openPicture(event) {
 
   popupCaption.textContent = event.target.alt; 
 }
+
+export { openPopup, closePopup, buttonAddNewCard, openPicture };
