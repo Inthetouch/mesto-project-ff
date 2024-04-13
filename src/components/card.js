@@ -17,28 +17,6 @@ function createCard(item, { deleteCard, giveLike, openPicture }) {
   return newCard;
 }
 
-//Функция добавления карточки
-function addNewCard(event) {
-  event.preventDefault();
-
-  const placeNameInput = document.querySelector('.popup__input_type_card-name');
-  const linkPlaceNameInput = document.querySelector('.popup__input_type_url');
-
-  const newCardItem = {
-    name: placeNameInput.value,
-    link: linkPlaceNameInput.value,
-    title: placeNameInput.value
-  };
-
-  const newCard = createCard(newCardItem, { deleteCard, giveLike});
-  placeList.prepend(newCard);
-
-  placeNameInput.value = '';
-  linkPlaceNameInput.value = '';
-
-  closePopup(handleAddCard);
-}
-
 //Функция удаления карточки
 function deleteCard(event) {
   event.target.closest('.places__item').remove();
@@ -49,4 +27,4 @@ function giveLike(event) {
   event.target.classList.toggle('card__like-button_is-active')
 }
 
-export { createCard, addNewCard, deleteCard, giveLike };
+export { createCard, deleteCard, giveLike };
