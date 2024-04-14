@@ -1,6 +1,6 @@
 import './pages/index.css';
 import { createCard, deleteCard, giveLike } from './components/card.js';
-import { openPopup, closePopup, buttonAddNewCard, openPicture } from './components/modal.js';
+import { openPopup, closePopup } from './components/modal.js';
 import { initialCards } from './cards.js';
 
 const placeList = document.querySelector('.places__list');
@@ -15,13 +15,14 @@ const buttonAddCard = document.querySelector('.profile__add-button');
 const handleAddCard = document.querySelector('.popup_type_new-card');
 const popupTypeImage = document.querySelector('.popup_type_image');
 const formNewPlace = document.forms['new-place'];
+const placeNameInput = formNewPlace.querySelector('.popup__input_type_card-name');
+const linkPlaceNameInput = formNewPlace.querySelector('.popup__input_type_url');
+const popupImage = popupTypeImage.querySelector('.popup__image');
+const popupCaption = popupTypeImage.querySelector(".popup__caption");
 
 //Функция добавления карточки
 function addNewCard(event) {
   event.preventDefault();
-
-  let placeNameInput = formNewPlace.querySelector('.popup__input_type_card-name');
-  let linkPlaceNameInput = formNewPlace.querySelector('.popup__input_type_url');
 
   const newCardItem = {
     name: placeNameInput.value,
@@ -83,7 +84,7 @@ function valueProfileSubmit(event) {
 }
 
 //Слушатель на кнопку "+"
-buttonAddCard.addEventListener('click', buttonAddNewCard);
+buttonAddCard.addEventListener('click', openAddNewCard);
 
 function addAnimation (element) {
   element.classList.add('popup_is-animated');
@@ -91,7 +92,35 @@ function addAnimation (element) {
 
 function addOpenClass (element) {
   element.classList.add('popup_is-opened');
+  //Слушатель на нажатие Escape
+  document.addEventListener('keydown', closeByEscape);
 }
 
+//Функция открытия формы карточки
+function openAddNewCard() {
+  
+  addAnimation(handleAddCard);
+  addOpenClass(handleAddCard);
+  
+  //Слушатель на нажатие Escape
+  document.addEventListener('keydown', closeByEscape);
+
+  handleAddCard.querySelector('.popup__form').addEventListener('submit', addNewCard);
+}
+
+//Функция открытия картинки карточки
+function openPicture(event) {
+  
+  addAnimation(popupTypeImage);
+  addOpenClass(popupTypeImage);
+  
+  popupImage.src = event.target.src;
+  popupImage.alt = event.target.alt;
+
+  popupCaption.textContent = event.target.alt; 
+
+  //Слушатель на нажатие Escape
+  document.addEventListener('keydown', closeByEscape);
+}
 
 export { saveFormProfileValue, valueProfileSubmit, editPopup, formElement, addNewCard, addAnimation, addOpenClass, popupTypeImage, closeByEscape };
