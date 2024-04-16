@@ -1,20 +1,16 @@
-import { saveFormProfileValue, valueProfileSubmit, editPopup, formElement, addAnimation, addOpenClass, closeByEscape } from '../index.js';
+import { sendProfileSubmit, closeByEscape } from '../index.js';
 
-//Функция окрытия окна редактирования
-function openPopup() {
-  saveFormProfileValue();
-  addAnimation(editPopup);
-  addOpenClass(editPopup);
 
-  //Слушатель на нажатие кнопки "Сохранить"
-  formElement.addEventListener('submit', valueProfileSubmit);
+function openPopup (element) {
+  element.classList.add('popup_is-opened');
+  //Слушатель на нажатие Escape
+  document.addEventListener('keydown', closeByEscape);
 }
-
 
 //Функция закрывающая окна редактирования
 function closePopup(element) {
   element.classList.remove('popup_is-opened');
-  element.removeEventListener('submit', valueProfileSubmit);
+  element.removeEventListener('submit', sendProfileSubmit);
   element.removeEventListener('keydown', closeByEscape); 
 }
 

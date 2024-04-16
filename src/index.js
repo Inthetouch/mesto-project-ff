@@ -45,14 +45,13 @@ initialCards.forEach((item) => {
 });
 
 //Слушатель на кнопку редактировать профиль
-editProfileButton.addEventListener('click', openPopup);
+editProfileButton.addEventListener('click', openProfileEdit);
 
 //Слушатель на нажатие кнопки Escape при открытом окне
 function closeByEscape(event) {
-  if (event.key === 'Escape') {
+  if (event.key === 'Escape' && document.querySelector('.popup_is-opened')) {
     const openedPopup = document.querySelector('.popup_is-opened');
     closePopup(openedPopup);
-    document.removeEventListener('keydown', closeByEscape); 
   }
 }
 
@@ -72,13 +71,13 @@ function saveFormProfileValue() {
 }
 
 //Функция сохранения введенных значений 
-function valueProfileSubmit(event) {
+function sendProfileSubmit(event) {
   event.preventDefault(); 
 
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
 
-  event.target.removeEventListener('submit', valueProfileSubmit);
+  event.target.removeEventListener('submit', sendProfileSubmit);
 
   closePopup(editPopup);
 }
@@ -90,37 +89,41 @@ function addAnimation (element) {
   element.classList.add('popup_is-animated');
 }
 
-function addOpenClass (element) {
-  element.classList.add('popup_is-opened');
-  //Слушатель на нажатие Escape
-  document.addEventListener('keydown', closeByEscape);
+//Функция окрытия окна редактирования ссылающаяся на openPopup
+function openProfileEdit() {
+  saveFormProfileValue();
+  addAnimation(editPopup);
+  openPopup(editPopup);
+
+  //Слушатель на нажатие кнопки "Сохранить"
+  formElement.addEventListener('submit', sendProfileSubmit);
 }
 
-//Функция открытия формы карточки
+//Функция открытия формы карточки ссылающаяся на openPopup
 function openAddNewCard() {
   
   addAnimation(handleAddCard);
-  addOpenClass(handleAddCard);
+  openPopup(handleAddCard);
   
-  //Слушатель на нажатие Escape
+  //Слушатель на нажатие Escape которая ссылаеться на closePopup
   document.addEventListener('keydown', closeByEscape);
 
   handleAddCard.querySelector('.popup__form').addEventListener('submit', addNewCard);
 }
 
-//Функция открытия картинки карточки
+//Функция открытия картинки карточки ссылающаяся на openPopup
 function openPicture(event) {
   
   addAnimation(popupTypeImage);
-  addOpenClass(popupTypeImage);
+  openPopup(popupTypeImage);
   
   popupImage.src = event.target.src;
   popupImage.alt = event.target.alt;
 
   popupCaption.textContent = event.target.alt; 
 
-  //Слушатель на нажатие Escape
+  //Слушатель на нажатие Escape которая ссылаеться на closePopup
   document.addEventListener('keydown', closeByEscape);
 }
 
-export { saveFormProfileValue, valueProfileSubmit, editPopup, formElement, addNewCard, addAnimation, addOpenClass, popupTypeImage, closeByEscape };
+export { saveFormProfileValue, sendProfileSubmit, formElement, addNewCard, addAnimation, popupTypeImage, closeByEscape };
