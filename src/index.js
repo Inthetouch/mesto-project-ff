@@ -104,9 +104,6 @@ function openAddNewCard() {
   
   addAnimation(handleAddCard);
   openPopup(handleAddCard);
-  
-  //Слушатель на нажатие Escape которая ссылаеться на closePopup
-  document.addEventListener('keydown', closeByEscape);
 
   handleAddCard.querySelector('.popup__form').addEventListener('submit', addNewCard);
 }
@@ -122,8 +119,6 @@ function openPicture(event) {
 
   popupCaption.textContent = event.target.alt; 
 
-  //Слушатель на нажатие Escape которая ссылаеться на closePopup
-  document.addEventListener('keydown', closeByEscape);
 }
 
 export { saveFormProfileValue, sendProfileSubmit, formElement, addNewCard, addAnimation, popupTypeImage, closeByEscape };
