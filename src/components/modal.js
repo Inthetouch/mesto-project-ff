@@ -11,7 +11,7 @@ function openPopup (element) {
 function closePopup(element) {
   element.classList.remove('popup_is-opened');
   element.removeEventListener('submit', sendProfileSubmit);
-  element.removeEventListener('keydown', closeByEscape); 
+  element.removeEventListener('keydown', closeByEscape);
 }
 
 export { openPopup, closePopup };
