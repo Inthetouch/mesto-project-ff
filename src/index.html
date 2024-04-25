@@ -38,9 +38,9 @@
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Редактировать профиль</h3>
       <form class="popup__form" name="edit-profile" novalidate>
-        <input id="name__input" type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" minlength="2" maxlength="40" required>
+        <input id="name__input" type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" minlength="2" maxlength="40" pattern="^[a-zA-Zа-яА-Я\s\-]+$" data-error-message="Поля могут содержать латинские/кирилические буквы, дефис и пробелы" required />
         <span class="name__input-error popup__input-error"></span>
-        <input id="description__input" type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" minlength="2" maxlength="200" required>
+        <input id="description__input" type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" minlength="2" maxlength="200" pattern="^[a-zA-Zа-яА-Я\s\-]+$" required />
         <span class="description__input-error popup__input-error"></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
@@ -51,8 +51,8 @@
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Новое место</h3>
       <form class="popup__form" name="new-place">
-        <input type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" required>
-        <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
+        <input type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" required/>
+        <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required/>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
     </div>

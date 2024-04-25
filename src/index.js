@@ -141,6 +141,12 @@ function hideInputError(formElement, inputElement) {
 
 //Функция валидирующая формы
 function isValid(formElement, inputElement) {
+  if (inputElement.validity.patternMismatch) {
+    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
+  } else {
+    inputElement.setCustomValidity("");
+  }
+  
   if(!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage);
   } else {
@@ -152,6 +158,8 @@ function isValid(formElement, inputElement) {
 function setEventListener(formElement){
   const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
   const buttonElement = formElement.querySelector('.button.popup__button');
+
+  toggleButtonState(inputList, buttonElement);
 
   inputList.forEach((inputElement) => {
     inputElement.addEventListener('input', () => {
@@ -179,4 +187,4 @@ function toggleButtonState(inputList, buttonElement) {
   }
 }
 
-export { sendProfileSubmit, closeByEscape };
+export { sendProfileSubmit, closeByEscape, hideInputError };

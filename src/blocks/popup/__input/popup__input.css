@@ -26,6 +26,7 @@
   transition: 0.3s;
   top: calc(43%);
   left: calc(9%);
+  max-width: 86%;
 }
 
 .popup__input-error:last-of-type {
