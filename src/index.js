@@ -2,6 +2,7 @@ import './pages/index.css';
 import { createCard, deleteCard, giveLike } from './components/card.js';
 import { openPopup, closePopup } from './components/modal.js';
 import { initialCards } from './cards.js';
+import { enableValidation, clearValidation } from './components/validation.js';
 
 const placeList = document.querySelector('.places__list');
 const editProfileButton = document.querySelector('.profile__edit-button');
@@ -96,7 +97,16 @@ function openProfileEdit() {
 
   //Слушатель на нажатие кнопки "Сохранить"
   formElement.addEventListener('submit', sendProfileSubmit);
-  setEventListener(formElement);
+  
+  clearValidation(formElement, {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonSelector: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
+  });
+
 };
 
 //Функция открытия формы карточки ссылающаяся на openPopup
@@ -106,6 +116,8 @@ function openAddNewCard() {
   openPopup(handleAddCard);
 
   handleAddCard.querySelector('.popup__form').addEventListener('submit', addNewCard);
+
+  //setEventListener(handleAddCard);
 };
 
 //Функция открытия картинки карточки ссылающаяся на openPopup
@@ -121,70 +133,14 @@ function openPicture(event) {
 
 };
 
-//Функция которая показывает сообщение об ошибке
-function showInputError(formElement, inputElement, errorMessage) {
-  const formError = formElement.querySelector(`.${inputElement.id}-error`);
+//Включение валидации
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup_error_visible'
+});
 
-  formElement.classList.add('popup__input_type_e1rror');
-  formError.textContent = errorMessage;
-  formError.classList.add('popup__input-error_active');
-};
-
-//Функция скрывающая текст 
-function hideInputError(formElement, inputElement) {
-  const formError = formElement.querySelector(`.${inputElement.id}-error`);
-
-  inputElement.classList.remove('popup__input_type_error');
-  formError.classList.remove('popup__input-error_active');
-  formError.textContent = '';
-};
-
-//Функция валидирующая формы
-function isValid(formElement, inputElement) {
-  if (inputElement.validity.patternMismatch) {
-    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
-  } else {
-    inputElement.setCustomValidity("");
-  }
-  
-  if(!inputElement.validity.valid) {
-    showInputError(formElement, inputElement, inputElement.validationMessage);
-  } else {
-    hideInputError(formElement, inputElement);
-  }
-};
-
-//Функция добавляющая слушатель на поля input
-function setEventListener(formElement){
-  const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
-  const buttonElement = formElement.querySelector('.button.popup__button');
-
-  toggleButtonState(inputList, buttonElement);
-
-  inputList.forEach((inputElement) => {
-    inputElement.addEventListener('input', () => {
-      isValid(formElement, inputElement);
-      toggleButtonState(inputList, buttonElement);
-    });
-  });
-};
-
-//Функция валидации полей
-function hasInvalidInput(inputList) {
-  return inputList.some((elementInput) => {
-    return !elementInput.validity.valid;
-  });
-};
-
-//Фукция отключающая кнопку
-function toggleButtonState(inputList, buttonElement) {
-  if(hasInvalidInput(inputList)) {
-    buttonElement.disabled = true;
-    buttonElement.classList.add('popup__button-disable');
-  } else {
-    buttonElement.disabled = false;
-    buttonElement.classList.remove('popup__button-disable');
-  }
-}
-
-export { sendProfileSubmit, closeByEscape, hideInputError };
+export { sendProfileSubmit, closeByEscape };
