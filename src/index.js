@@ -12,6 +12,7 @@ const nameInput = formElement.querySelector('.popup__input_type_name');
 const jobInput = formElement.querySelector('.popup__input_type_description');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+const profileImage = document.querySelector('.profile__image');
 const buttonAddCard = document.querySelector('.profile__add-button');
 const handleAddCard = document.querySelector('.popup_type_new-card');
 const popupTypeImage = document.querySelector('.popup_type_image');
@@ -32,18 +33,12 @@ function addNewCard(event) {
   };
 
   const newCard = createCard(newCardItem, { deleteCard, giveLike, openPicture});
+
   placeList.prepend(newCard);
-
+  sendNewCard(newCardItem.name, newCardItem.link);
   formNewPlace.reset();
-
   closePopup(handleAddCard);
 };
-
-//Добавление карточек на страницу
-initialCards.forEach((item) => {
-  const addCard = createCard(item, { deleteCard, giveLike, openPicture });
-  placeList.append(addCard);
-});
 
 //Слушатель на кнопку редактировать профиль
 editProfileButton.addEventListener('click', openProfileEdit);
@@ -78,6 +73,7 @@ function sendProfileSubmit(event) {
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value; 
   event.target.removeEventListener('submit', sendProfileSubmit);
+  sendProfileData(profileTitle.textContent, profileDescription.textContent);
 
   closePopup(editPopup);
 };
@@ -116,8 +112,6 @@ function openAddNewCard() {
   openPopup(handleAddCard);
 
   handleAddCard.querySelector('.popup__form').addEventListener('submit', addNewCard);
-
-  //setEventListener(handleAddCard);
 };
 
 //Функция открытия картинки карточки ссылающаяся на openPopup
@@ -142,5 +136,105 @@ enableValidation({
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup_error_visible'
 });
+
+
+//Получение информации о пользователе с сервера
+function fetchUserData() {
+  return fetch('https://mesto.nomoreparties.co/v1/cohort-magistr-2/users/me', {
+    headers: {
+      authorization: 'cbee5349-85cc-413a-8b01-3e353ce82196'
+    }
+  })
+  .then((response) => {
+    if (response.ok) {
+      return response.json()
+    } else {
+      return Promise.reject(`Ошибка: ${response.status}`);
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}
+
+//Получение информации о карточках с сервера
+function fetchCardsData() {
+  return fetch('https://mesto.nomoreparties.co/v1/cohort-magistr-2/cards', {
+    headers: {
+      authorization: 'cbee5349-85cc-413a-8b01-3e353ce82196'
+    }
+  })
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      return Promise.reject(`Ошибка: ${response.status}`);
+    }
+  });
+}
+
+//Вывод карточек и имени пользователя с сервера на сайт
+Promise.all([fetchCardsData(), fetchUserData()])
+  .then(([cardsData, userData]) => {
+    cardsData.forEach(card => {
+      const newCard = createCard(card, {deleteCard, giveLike, openPicture});
+      placeList.append(newCard);
+    });
+    profileTitle.textContent = userData.name;
+    profileDescription.textContent = userData.about;
+  })
+  .catch(err => {
+    console.log('Ошибка при выгрузке:', err);
+  })
+
+//Сохранение информации на сервере после редактирования профиля
+function sendProfileData(person, description) {
+  return fetch('https://mesto.nomoreparties.co/v1/cohort-magistr-2/users/me', {
+    method: 'PATCH',
+    headers: {
+      authorization: 'cbee5349-85cc-413a-8b01-3e353ce82196',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: person,
+      about: description
+    })
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        return Promise.reject(`Что-то пошло не так: ${response.status}`);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+}
+
+//Отправка новой карточки на сервер
+function sendNewCard(title, link) {
+  return fetch('https://mesto.nomoreparties.co/v1/cohort-magistr-2/cards', {
+    method: 'POST',
+    headers: {
+      authorization: 'cbee5349-85cc-413a-8b01-3e353ce82196',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: title,
+      link: link
+    })
+  })
+    .then(response => {
+      if(response.ok) {
+        return response.json();
+      } else {
+        return Promise.reject(`Что-то пошло не так: ${response.status}`)
+      }
+    })
+    .catch(error => {
+      console.log('Ошибка:', error);
+    })
+}
 
 export { sendProfileSubmit, closeByEscape };

@@ -17,7 +17,7 @@ function isValid(formElement, inputElement) {
 function showInputError(formElement, inputElement, errorMessage) {
   const formError = formElement.querySelector(`.${inputElement.id}-error`);
 
-  formElement.classList.add('popup__input_type_e1rror');
+  formElement.classList.add('popup__input_type_error');
   formError.textContent = errorMessage;
   formError.classList.add('popup__input-error_active');
 };
