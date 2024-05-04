@@ -14,12 +14,15 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div class="profile__image" style="background-image: url('<%=require(`./images/avatar.jpg`)%>');">
+      <div class="profile__image">
+        <div class="profile__edit-picture">
+          <img src="<%=require('./images/edit-icon.svg')%>" alt="Редактировать" class="profile__image-edit">
+        </div>
       </div>
       <div class="profile__info">
-        <h1 class="profile__title">Жак-Ив Кусто</h1>
+        <h1 class="profile__title"></h1>
         <button class="profile__edit-button" type="button"></button>
-        <p class="profile__description">Исследователь океана</p>
+        <p class="profile__description"></p>
       </div>
       <button class="profile__add-button" type="button"></button>
     </section>
@@ -41,7 +44,7 @@
         <input id="name__input" type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" minlength="2" maxlength="40" pattern="^[a-zA-Zа-яА-Я\s\-]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required />
         <span class="name__input-error popup__input-error"></span>
         <input id="description__input" type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" minlength="2" maxlength="200" pattern="^[a-zA-Zа-яА-Я\s\-]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required />
-        <span class="description__input-error popup__input-error"></span>
+        <span class="description__input-error popup__link-error"></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
     </div>
@@ -54,7 +57,7 @@
         <input id="place__name" type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" minlength="2" maxlength="30" pattern="^[A-Za-zА-Яа-я\s\-]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required/>
         <span class="place__name-error popup__input-error"></span>
         <input id="place__link" type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required/>
-        <span class="place__link-error popup__input-error"></span>
+        <span class="place__link-error popup__link-error"></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
     </div>
@@ -64,6 +67,17 @@
       <button type="button" class="popup__close"></button>
       <img src="" alt="" class="popup__image">
       <p class="popup__caption"></p>
+    </div>
+  </div>
+  <div class="popup popup_new-avatar">
+    <div class="popup__content popup__avatar">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      <form class="popup__form form__avatar" name="new-url" novalidate>
+        <input id="avatar__link" type="url" name="new__url" class="popup__input popup__avatar-link" placeholder="Ссылка на картинку" required/>
+        <span class="avatar__link-error popup__avatar-error"></span>
+        <button type="submit" class="button popup__button button__save-avatar">Сохранить</button>
+      </form>
     </div>
   </div>
 </div>
@@ -79,7 +93,7 @@
       </h2>
       <div class="card__like-box">
         <button type="button" class="card__like-button"></button>
-        <span class="card__likes">0</span>
+        <span class="card__likes"></span>
       </div>
     </div>
   </li>

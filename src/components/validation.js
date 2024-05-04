@@ -66,10 +66,11 @@ function setEventListener(formElement){
 
 //Функция, очищающая ошибки валидации и делающая кнопку неактивной
 function clearValidation (formElement, validationConfig) {
+  
   const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
   const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
 
-  inputList.forEach((inputElement) => {
+  inputList.forEach(inputElement => {
     hideInputError(formElement, inputElement);
   });
 
