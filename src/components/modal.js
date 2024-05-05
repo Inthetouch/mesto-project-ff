@@ -11,7 +11,6 @@ function closePopup(element) {
   element.classList.remove('popup_is-opened');
   removeEventListeners(element, ['submit', 'keydown'], sendProfileSubmit);
   removeEventListeners(element, ['keydown'], closeByEscape);
-  removeEventListeners(element, ['submit'], sendNewAvatar);
   resetForm();
 }
 

@@ -3,6 +3,7 @@ import { createCard, deleteCard, giveLike } from './components/card.js';
 import { openPopup, closePopup } from './components/modal.js';
 import { enableValidation, clearValidation } from './components/validation.js';
 import { fetchCardsData, fetchUserData, sendProfileData, sendNewCard, sendAvatarToServer } from './components/api.js';
+import { checkResponse } from './utils/check.js';
 //import { initialCards } from './cards.js';
 
 
@@ -52,16 +53,22 @@ function addNewCard(event) {
 
   const newCard = createCard(newCardItem, { deleteCard, giveLike, openPicture});
 
+  newCardForm.querySelector('.button.popup__button').textContent = 'Сохранение...';
+
   placeList.prepend(newCard);
   sendNewCard(newCardItem.name, newCardItem.link)
     .then(data => {
       const cardElement = document.querySelector('.places__item.card')
       cardElement.dataset.cardId = data._id;
+      closePopup(handleAddCard);
     })
     .catch(error => {
       console.log(`Ошибка: ${error}`);
     })
-  closePopup(handleAddCard);
+    .finally(() => {
+      newCardForm.querySelector('.button.popup__button').textContent = 'Сохранить';
+    })
+  
 };
 
 //Слушатель на кнопку редактировать профиль
@@ -88,11 +95,21 @@ function sendProfileSubmit(event) {
 
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value; 
-  event.target.removeEventListener('submit', sendProfileSubmit);
 
-  sendProfileData(profileTitle.textContent, profileDescription.textContent);
+  formElement.querySelector('.button.popup__button').textContent = 'Сохранение...';
 
-  closePopup(editPopup);
+  sendProfileData(profileTitle.textContent, profileDescription.textContent)
+    .then(() => {
+      closePopup(editPopup);
+    })
+    .catch(error => {
+      console.log(`Ошибка: ${error}`);
+    })
+    .finally(() => {
+      formElement.querySelector('.button.popup__button').textContent = 'Сохранить';
+    })
+
+  
 };
 
 //Слушатель на кнопку "+"
@@ -111,10 +128,6 @@ function openProfileEdit() {
   //Слушатель на нажатие кнопки "Сохранить"
   formElement.addEventListener('submit', sendProfileSubmit);
   
-  formElement.addEventListener('submit', function () {
-    formElement.querySelector('.button.popup__button').textContent = 'Сохранение...';
-  })
-  
   clearValidation(formElement, config);
 };
 
@@ -125,10 +138,6 @@ function openAddNewCard() {
   openPopup(handleAddCard);
 
   newCardForm.addEventListener('submit', addNewCard);
-
-  newCardForm.addEventListener('submit', function () {
-    newCardForm.querySelector('.button.popup__button').textContent = 'Сохранение...';
-  })
 
   formNewPlace.reset();
   clearValidation(newCardForm, config);
@@ -185,10 +194,7 @@ function replaceAvatar() {
   openPopup(addNewAvatar);
   clearValidation(addNewAvatar, config);
   sendAvatar.addEventListener('submit', sendNewAvatar);
-  
-  sendAvatar.addEventListener('submit', function () {
-    sendAvatar.querySelector('.button.popup__button').textContent = 'Сохранение...';
-  });
+  profileImage.removeEventListener('click', replaceAvatar);
 }
 
 //Функция сброса форм, кроме карточки редактирования профиля
@@ -203,11 +209,19 @@ function resetForm() {
 //Функция отправки данных после нажатия кнопки сохранить
 function sendNewAvatar() {
   const url = urlAvatar.value;
+  sendAvatar.querySelector('.button.popup__button').textContent = 'Сохранение...';
   sendAvatarToServer(url)
     .then(data => {
       profileImage.style.backgroundImage = `url('${data.avatar}')`;
+      closePopup(addNewAvatar);
     })
-  closePopup(addNewAvatar);
+    .catch((error) => {
+      console.log(`Ошибка: ${error}`)
+    })
+    .finally(() => {
+      sendAvatar.querySelector('.button.popup__button').textContent = 'Сохранить';
+    })
+  
 };
 
 export { sendProfileSubmit, resetForm, sendNewAvatar, ownerUserId, config };
