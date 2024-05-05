@@ -1,3 +1,5 @@
+import { config } from "../index.js";
+
 //Функция валидирующая формы
 function isValid(formElement, inputElement) {
   if (inputElement.validity.patternMismatch) {
@@ -17,17 +19,17 @@ function isValid(formElement, inputElement) {
 function showInputError(formElement, inputElement, errorMessage) {
   const formError = formElement.querySelector(`.${inputElement.id}-error`);
 
-  formElement.classList.add('popup__input_type_error');
+  formElement.classList.add(config.inputErrorClass);
   formError.textContent = errorMessage;
-  formError.classList.add('popup__input-error_active');
+  formError.classList.add(config.inputErrorActive);
 };
 
 //Функция скрывающая текст 
 function hideInputError(formElement, inputElement) {
   const formError = formElement.querySelector(`.${inputElement.id}-error`);
 
-  inputElement.classList.remove('popup__input_type_error');
-  formError.classList.remove('popup__input-error_active');
+  inputElement.classList.remove(config.inputErrorClass);
+  formError.classList.remove(config.inputErrorActive);
   formError.textContent = '';
 };
 
@@ -42,17 +44,17 @@ function hasInvalidInput(inputList) {
 function toggleButtonState(inputList, buttonElement) {
   if(hasInvalidInput(inputList)) {
     buttonElement.disabled = true;
-    buttonElement.classList.add('popup__button-disable');
+    buttonElement.classList.add(config.inactiveButtonSelector);
   } else {
     buttonElement.disabled = false;
-    buttonElement.classList.remove('popup__button-disable');
+    buttonElement.classList.remove(config.inactiveButtonSelector);
   }
 }
 
 //Функция добавляющая слушатель на поля input
-function setEventListener(formElement){
-  const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
-  const buttonElement = formElement.querySelector('.button.popup__button');
+function setEventListener(formElement, validationConfig){
+  const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
+  const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
 
   toggleButtonState(inputList, buttonElement);
 
@@ -85,7 +87,7 @@ function enableValidation(validationConfig) {
     formElement.addEventListener('submit', function(event) {
       event.preventDefault();
     });
-    setEventListener(formElement);
+    setEventListener(formElement, validationConfig);
   })
 }
 

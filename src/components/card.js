@@ -1,4 +1,5 @@
-import { sendDeleteCard, sendLikeCard, fetchUserData } from "./api";
+import { sendDeleteCard, sendLikeCard } from "./api";
+import { ownerUserId } from "../index.js";
 
 //Функция создания карточек
 function createCard(item, { deleteCard, giveLike, openPicture }) {
@@ -17,25 +18,23 @@ function createCard(item, { deleteCard, giveLike, openPicture }) {
   getLike.textContent = getLikesCount(item.likes);
   cardId.dataset.cardId = item._id;
 
-  fetchUserData()
-    .then(userData => {
-      const currentUserId = userData._id;
-      
-      if (item.owner && item.owner._id === currentUserId) {
-        deleteButton.style.display = 'flex';
-      } else {
-        deleteButton.style.display = 'none';
-      }
+  (function(item, ownerUser) {
+    if (item.owner && item.owner._id === ownerUser) {
+      deleteButton.style.display = 'flex';
+    } else {
+      deleteButton.style.display = 'none';
+    }
+  })(item, ownerUserId);
 
-      if(item.likes && Array.isArray(item.likes)){
-        item.likes.forEach(user => {
-          if (user._id === currentUserId) {
-            cardLike.classList.add('card__like-button_is-active');
-          }
-        });
-      }
-    });
-
+  (function(item) {
+    if(item.likes && Array.isArray(item.likes)){
+      item.likes.forEach(user => {
+        if (user._id === ownerUserId) {
+          cardLike.classList.add('card__like-button_is-active');
+        }
+      });
+    }
+  })(item);
   
   deleteButton.addEventListener('click', deleteCard);
   cardLike.addEventListener('click', giveLike);
@@ -44,13 +43,20 @@ function createCard(item, { deleteCard, giveLike, openPicture }) {
   return newCard;
 };
 
+
 //Функция удаления карточки
 function deleteCard(event) {
   const element = event.target.closest('.places__item');
   const cardId = element.dataset.cardId;
 
-  element.remove();
-  sendDeleteCard(cardId);
+  sendDeleteCard(cardId)
+    .then(response => {
+      console.log(response);
+      element.remove();
+    })
+    .catch(error => {
+      console.log(`Ошибка: ${error}`);
+    })
 };
 
 //Меняет цвет лайка
@@ -61,8 +67,11 @@ function giveLike(event) {
 
   if(!isLiked) {
     sendLikeCard(cardId, true)
+      .then(response => {
+        return response.likes;
+      })
       .then(updateLikes => {
-        let likeCount = element.querySelector('.card__likes');
+        const likeCount = element.querySelector('.card__likes');
         likeCount.textContent = updateLikes.length;
         event.target.classList.add('card__like-button_is-active');
       })
@@ -71,6 +80,9 @@ function giveLike(event) {
       });
   } else {
     sendLikeCard(cardId, false)
+      .then(response => {
+        return response.likes;
+      })
       .then(updateLikes => {
         let likeCount = element.querySelector('.card__likes');
         likeCount.textContent = updateLikes.length;

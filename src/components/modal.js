@@ -1,4 +1,4 @@
-import { sendProfileSubmit, closeByEscape, resetForm, sendNewAvatar } from '../index.js';
+import { sendProfileSubmit, resetForm, sendNewAvatar } from '../index.js';
 
 function openPopup (element) {
   element.classList.add('popup_is-opened');
@@ -9,10 +9,25 @@ function openPopup (element) {
 //Функция закрывающая окна редактирования
 function closePopup(element) {
   element.classList.remove('popup_is-opened');
-  element.removeEventListener('submit', sendProfileSubmit);
-  element.removeEventListener('keydown', closeByEscape);
-  element.removeEventListener('click', sendNewAvatar);
+  removeEventListeners(element, ['submit', 'keydown'], sendProfileSubmit);
+  removeEventListeners(element, ['keydown'], closeByEscape);
+  removeEventListeners(element, ['submit'], sendNewAvatar);
   resetForm();
 }
 
-export { openPopup, closePopup };
+//Функция снимающая слушатель
+function removeEventListeners(element, events, callback) {
+  events.forEach(event => {
+    element.removeEventListener(event, callback);
+  });
+}
+
+//Слушатель на нажатие кнопки Escape при открытом окне
+function closeByEscape(event) {
+  if (event.key === 'Escape' && document.querySelector('.popup_is-opened')) {
+    const openedPopup = document.querySelector('.popup_is-opened');
+    closePopup(openedPopup);
+  }
+};
+
+export { openPopup, closePopup, closeByEscape };
