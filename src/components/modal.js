@@ -9,16 +9,8 @@ function openPopup (element) {
 //Функция закрывающая окна редактирования
 function closePopup(element) {
   element.classList.remove('popup_is-opened');
-  removeEventListeners(element, ['submit', 'keydown'], sendProfileSubmit);
-  removeEventListeners(element, ['keydown'], closeByEscape);
+  element.removeEventListener('keydown', closeByEscape);
   resetForm();
-}
-
-//Функция снимающая слушатель
-function removeEventListeners(element, events, callback) {
-  events.forEach(event => {
-    element.removeEventListener(event, callback);
-  });
 }
 
 //Слушатель на нажатие кнопки Escape при открытом окне

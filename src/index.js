@@ -3,8 +3,6 @@ import { createCard, deleteCard, giveLike } from './components/card.js';
 import { openPopup, closePopup } from './components/modal.js';
 import { enableValidation, clearValidation } from './components/validation.js';
 import { fetchCardsData, fetchUserData, sendProfileData, sendNewCard, sendAvatarToServer } from './components/api.js';
-import { checkResponse } from './utils/check.js';
-//import { initialCards } from './cards.js';
 
 
 const placeList = document.querySelector('.places__list');
@@ -51,13 +49,15 @@ function addNewCard(event) {
     title: placeNameInput.value
   };
 
-  const newCard = createCard(newCardItem, { deleteCard, giveLike, openPicture});
-
-  newCardForm.querySelector('.button.popup__button').textContent = 'Сохранение...';
-
-  placeList.prepend(newCard);
+  
   sendNewCard(newCardItem.name, newCardItem.link)
     .then(data => {
+      const newCard = createCard(newCardItem, ownerUserId, { deleteCard, giveLike, openPicture});
+
+      event.submitter.textContent = 'Сохранение...';
+
+      placeList.prepend(newCard);
+
       const cardElement = document.querySelector('.places__item.card')
       cardElement.dataset.cardId = data._id;
       closePopup(handleAddCard);
@@ -66,7 +66,7 @@ function addNewCard(event) {
       console.log(`Ошибка: ${error}`);
     })
     .finally(() => {
-      newCardForm.querySelector('.button.popup__button').textContent = 'Сохранить';
+      event.submitter.textContent = 'Сохранить';
     })
   
 };
@@ -95,8 +95,8 @@ function sendProfileSubmit(event) {
 
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value; 
-
-  formElement.querySelector('.button.popup__button').textContent = 'Сохранение...';
+  
+  event.submitter.textContent = 'Сохранение...';
 
   sendProfileData(profileTitle.textContent, profileDescription.textContent)
     .then(() => {
@@ -106,7 +106,7 @@ function sendProfileSubmit(event) {
       console.log(`Ошибка: ${error}`);
     })
     .finally(() => {
-      formElement.querySelector('.button.popup__button').textContent = 'Сохранить';
+      event.submitter.textContent = 'Сохранить';
     })
 
   
@@ -119,15 +119,14 @@ function addAnimation (element) {
   element.classList.add('popup_is-animated');
 };
 
+//Слушатель на нажатие кнопки "Сохранить"
+formElement.addEventListener('submit', sendProfileSubmit);
+
 //Функция окрытия окна редактирования ссылающаяся на openPopup
 function openProfileEdit() {
   saveFormProfileValue();
   addAnimation(editPopup);
   openPopup(editPopup);
-
-  //Слушатель на нажатие кнопки "Сохранить"
-  formElement.addEventListener('submit', sendProfileSubmit);
-  
   clearValidation(formElement, config);
 };
 
@@ -137,12 +136,12 @@ function openAddNewCard() {
   addAnimation(handleAddCard);
   openPopup(handleAddCard);
 
-  newCardForm.addEventListener('submit', addNewCard);
-
   formNewPlace.reset();
   clearValidation(newCardForm, config);
-
 };
+
+//Слушатель на сохранение новой карточки
+newCardForm.addEventListener('submit', addNewCard);
 
 //Функция открытия картинки карточки ссылающаяся на openPopup
 function openPicture(event) {
@@ -158,14 +157,7 @@ function openPicture(event) {
 };
 
 //Включение валидации
-enableValidation({
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup_error_visible'
-});
+enableValidation(config);
 
 //Вывод карточек и имени пользователя с сервера на сайт
 Promise.all([fetchCardsData(), fetchUserData()])
@@ -175,7 +167,7 @@ Promise.all([fetchCardsData(), fetchUserData()])
     profileImage.style.backgroundImage = `url('${userData.avatar}')`;
 
     cardsData.forEach(card => {
-      const newCard = createCard(card, {deleteCard, giveLike, openPicture});
+      const newCard = createCard(card, ownerUserId, {deleteCard, giveLike, openPicture});
       placeList.append(newCard);
     });
     profileTitle.textContent = userData.name;
@@ -193,9 +185,10 @@ function replaceAvatar() {
   addAnimation(addNewAvatar);
   openPopup(addNewAvatar);
   clearValidation(addNewAvatar, config);
-  sendAvatar.addEventListener('submit', sendNewAvatar);
-  profileImage.removeEventListener('click', replaceAvatar);
 }
+
+//Слушатель на сохранение аватара
+sendAvatar.addEventListener('submit', sendNewAvatar);
 
 //Функция сброса форм, кроме карточки редактирования профиля
 function resetForm() {
@@ -207,9 +200,9 @@ function resetForm() {
 };
 
 //Функция отправки данных после нажатия кнопки сохранить
-function sendNewAvatar() {
+function sendNewAvatar(event) {
   const url = urlAvatar.value;
-  sendAvatar.querySelector('.button.popup__button').textContent = 'Сохранение...';
+  event.submitter.textContent = 'Сохранение...';
   sendAvatarToServer(url)
     .then(data => {
       profileImage.style.backgroundImage = `url('${data.avatar}')`;
@@ -219,7 +212,7 @@ function sendNewAvatar() {
       console.log(`Ошибка: ${error}`)
     })
     .finally(() => {
-      sendAvatar.querySelector('.button.popup__button').textContent = 'Сохранить';
+      event.submitter.textContent = 'Сохранить';
     })
   
 };

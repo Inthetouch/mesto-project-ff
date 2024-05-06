@@ -1,8 +1,7 @@
 import { sendDeleteCard, sendLikeCard } from "./api";
-import { ownerUserId } from "../index.js";
 
 //Функция создания карточек
-function createCard(item, { deleteCard, giveLike, openPicture }) {
+function createCard(item, ownerUserId, { deleteCard, giveLike, openPicture }) {
   const cardTemplate = document.querySelector('#card-template').content;
   const newCard = cardTemplate.cloneNode(true);
   const cardId = newCard.querySelector('.places__item.card');
