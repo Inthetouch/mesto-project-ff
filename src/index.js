@@ -100,6 +100,8 @@ function sendProfileSubmit(event) {
 
   sendProfileData(profileTitle.textContent, profileDescription.textContent)
     .then(() => {
+      profileTitle.textContent = nameInput.value;
+      profileDescription.textContent = jobInput.value;
       closePopup(editPopup);
     })
     .catch(error => {
@@ -185,6 +187,7 @@ function replaceAvatar() {
   addAnimation(addNewAvatar);
   openPopup(addNewAvatar);
   clearValidation(addNewAvatar, config);
+  resetForm();
 }
 
 //Слушатель на сохранение аватара

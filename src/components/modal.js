@@ -10,7 +10,6 @@ function openPopup (element) {
 function closePopup(element) {
   element.classList.remove('popup_is-opened');
   element.removeEventListener('keydown', closeByEscape);
-  resetForm();
 }
 
 //Слушатель на нажатие кнопки Escape при открытом окне
